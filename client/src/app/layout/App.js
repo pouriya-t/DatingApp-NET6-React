@@ -1,29 +1,22 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { fetchCurrentUser } from "../../features/account/accountSlice";
+import HomePage from "../../features/home/HomePage";
+import Navbar from "../components/Header/Navbar";
+import { useAppDispatch } from "../store/configureStore";
 import "./styles.css";
 
 function App() {
-  const [users, setUsers] = useState(null);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
-    fetch("https://localhost:5001/api/users")
-      .then((response) => response.json())
-      .then((data) => {
-        setUsers(data);
-      });
-  }, []);
+    dispatch(fetchCurrentUser());
+  }, [dispatch]);
 
-  console.log(users);
   return (
-    <div>
-      <h1>Dating App</h1>
-      <ul>
-        {users?.map((user) => (
-          <li>
-            {user.id} - {user.userName}
-          </li>
-        ))}
-      </ul>
-    </div>
+    <>
+      <Navbar />
+      <HomePage />
+    </>
   );
 }
 
