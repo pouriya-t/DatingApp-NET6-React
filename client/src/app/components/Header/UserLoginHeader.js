@@ -11,13 +11,16 @@ import { LoadingButton } from "@mui/lab";
 import { makeStyles } from "@mui/styles";
 import { useForm } from "react-hook-form";
 import { useAppDispatch, useAppSelector } from "../../store/configureStore";
-import { signInUser, signOut } from "../../../features/account/accountSlice";
+import {
+  fetchCurrentUser,
+  signInUser,
+  signOut,
+} from "../../../features/account/accountSlice";
 
 export default function UserLoginHeader() {
   const classes = useStyles();
-
   const dispatch = useAppDispatch();
-  const { userInfo } = useAppSelector((state) => state.account);
+  let { userInfo } = useAppSelector((state) => state.account);
   const {
     register,
     handleSubmit,
@@ -37,9 +40,14 @@ export default function UserLoginHeader() {
       console.log(error);
     }
   }
+
+  if (!userInfo) {
+    dispatch(fetchCurrentUser());
+  }
+
   return (
     <>
-      {userInfo?.username !== undefined ? (
+      {userInfo ? (
         <>
           <Typography sx={{ mr: 2 }}>Welcome {userInfo.username}</Typography>
           <Select
@@ -73,7 +81,6 @@ export default function UserLoginHeader() {
             onSubmit={handleSubmit(onSubmit)}
             sx={{
               padding: "2px",
-              backgroundColor: "#19b3d2",
               border: "none",
             }}
           >
@@ -102,9 +109,9 @@ export default function UserLoginHeader() {
               loading={isSubmitting}
               disabled={!isValid}
               variant="contained"
-              type="submit"
               color="secondary"
-              sx={{ padding: "8px", marginLeft: "10px", margin: "10px" }}
+              type="submit"
+              sx={{ paddingRight: "10px", marginLeft: "10px", margin: "10px" }}
             >
               Login
             </LoadingButton>

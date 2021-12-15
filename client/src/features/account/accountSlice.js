@@ -1,8 +1,9 @@
 import { createAsyncThunk, createSlice, isAnyOf } from "@reduxjs/toolkit";
+import { toast } from "react-toastify";
 import agent from "../../app/api/agent";
 
 const initialState = {
-  userInfo: null,
+  userInfo: undefined,
 };
 
 export const signInUser = createAsyncThunk(
@@ -13,6 +14,7 @@ export const signInUser = createAsyncThunk(
       localStorage.setItem("user", JSON.stringify(userData));
       return userData;
     } catch (error) {
+      toast.error(error.response.data);
       return thunkAPI.rejectWithValue({ error: error.data });
     }
   }
@@ -38,8 +40,6 @@ export const fetchCurrentUser = createAsyncThunk(
   async () => {
     if (localStorage.getItem("user") !== null) {
       return JSON.parse(localStorage.getItem("user"));
-    } else {
-      return null;
     }
   }
 );
@@ -63,7 +63,7 @@ export const accountSlice = createSlice({
     builder.addMatcher(
       isAnyOf(signInUser.fulfilled, fetchCurrentUser.fulfilled),
       (state, action) => {
-        state.userInfo = { ...action.payload };
+        state.userInfo = action.payload;
       }
     );
   },

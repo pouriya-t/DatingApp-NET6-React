@@ -1,9 +1,10 @@
 import { useState } from "react";
 import MenuIcon from "@mui/icons-material/Menu";
-import { Menu, MenuItem, IconButton, Divider, Box } from "@mui/material";
+import { Menu, MenuItem, IconButton, Divider, Box, Paper } from "@mui/material";
+import { NavLink } from "react-router-dom";
 import UserLoginHeader from "./UserLoginHeader";
 
-export default function SmallNavbar({ menuList }) {
+export default function SmallNavbar({ menuList, navStyles, userInfo }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -18,22 +19,35 @@ export default function SmallNavbar({ menuList }) {
         <MenuIcon />
       </IconButton>
       <Menu
-        id="basic-menu"
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}
         sx={{ width: "80%" }}
         keepMounted
       >
-        {menuList.map((menuItem) => (
-          <MenuItem onClick={handleClose} key={menuItem}>
-            {menuItem}
-          </MenuItem>
-        ))}
-        <Divider />
-        <Box sx={{ padding: "5px", backgroundColor: "#19b3d2" }}>
-          <UserLoginHeader />
-        </Box>
+        <Paper
+          sx={{
+            color: "#9c27b0",
+            backgroundColor: "#e1e6f2",
+          }}
+        >
+          {userInfo &&
+            menuList.map((item, id) => (
+              <MenuItem
+                key={id}
+                to={item.path}
+                sx={(navStyles, { fontWeight: "bold" })}
+                onClick={handleClose}
+                component={NavLink}
+              >
+                {item.title}
+              </MenuItem>
+            ))}
+          <Divider />
+          <Box sx={{ padding: "5px" }}>
+            <UserLoginHeader />
+          </Box>
+        </Paper>
       </Menu>
     </>
   );

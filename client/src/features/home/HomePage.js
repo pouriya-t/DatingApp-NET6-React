@@ -6,7 +6,6 @@ import Register from "../account/Register";
 export default function HomePage() {
   const [isRegisterForm, setIsRegisterForm] = useState(false);
   const { userInfo } = useAppSelector((state) => state.account);
-  const checkUserInfo = userInfo && Object.keys(userInfo).length;
 
   return (
     <>
@@ -17,7 +16,7 @@ export default function HomePage() {
         alignItems="center"
         marginTop="5%"
       >
-        {isRegisterForm && (checkUserInfo === 0 || checkUserInfo === null) ? (
+        {isRegisterForm && !userInfo ? (
           <>
             <Register setIsRegisterForm={setIsRegisterForm} />
           </>
@@ -29,7 +28,7 @@ export default function HomePage() {
             </Typography>
 
             <Stack spacing={2} direction="row">
-              {(checkUserInfo === 0 || checkUserInfo === null) && (
+              {!userInfo && (
                 <Button
                   variant="contained"
                   onClick={() => setIsRegisterForm(true)}

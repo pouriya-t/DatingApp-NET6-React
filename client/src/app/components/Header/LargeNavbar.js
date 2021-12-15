@@ -1,17 +1,22 @@
-import { Box, MenuItem, Typography } from "@mui/material";
+import { Box, MenuItem } from "@mui/material";
+import { NavLink } from "react-router-dom";
 import UserLoginHeader from "./UserLoginHeader";
 
-export default function LargeNavbar({ menuList }) {
+export default function LargeNavbar({ menuList, navStyles, userInfo }) {
   return (
     <>
       <Box sx={{ display: { xs: "none", md: "flex" }, marginLeft: "20px" }}>
-        {menuList.map((menuItem) => (
-          <MenuItem key={menuItem} size="large" color="inherit">
-            <Typography sx={{ fontWeight: "bold" }} textAlign="center">
-              {menuItem}
-            </Typography>
-          </MenuItem>
-        ))}
+        {userInfo &&
+          menuList.map((item, id) => (
+            <MenuItem
+              key={id}
+              to={item.path}
+              sx={(navStyles, { fontWeight: "bold" })}
+              component={NavLink}
+            >
+              {item.title}
+            </MenuItem>
+          ))}
       </Box>
       <Box sx={{ flexGrow: 1 }} />
       <UserLoginHeader />
