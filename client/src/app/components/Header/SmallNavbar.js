@@ -4,6 +4,9 @@ import { Menu, MenuItem, IconButton, Divider, Box, Paper } from "@mui/material";
 import { NavLink } from "react-router-dom";
 import UserLoginHeader from "./UserLoginHeader";
 
+const styles = {
+  fontWeight: "bold",
+};
 export default function SmallNavbar({ menuList, navStyles, userInfo }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -12,6 +15,10 @@ export default function SmallNavbar({ menuList, navStyles, userInfo }) {
   };
   const handleClose = () => {
     setAnchorEl(null);
+  };
+  const combineStyle = {
+    ...navStyles,
+    ...styles,
   };
   return (
     <>
@@ -36,7 +43,7 @@ export default function SmallNavbar({ menuList, navStyles, userInfo }) {
               <MenuItem
                 key={id}
                 to={item.path}
-                sx={(navStyles, { fontWeight: "bold" })}
+                sx={combineStyle}
                 onClick={handleClose}
                 component={NavLink}
               >

@@ -45,6 +45,9 @@ export default function Navbar() {
             <MenuItem sx={navStyles} to="/" component={NavLink}>
               <Typography variant="h4">MUI</Typography>
             </MenuItem>
+            <MenuItem sx={navStyles} to="/error" component={NavLink}>
+              <Typography variant="h6">Error</Typography>
+            </MenuItem>
             {isSmall ? (
               <SmallNavbar
                 userInfo={userInfo}

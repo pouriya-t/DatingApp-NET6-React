@@ -41,6 +41,7 @@ export const fetchCurrentUser = createAsyncThunk(
     if (localStorage.getItem("user") !== null) {
       return JSON.parse(localStorage.getItem("user"));
     }
+    return null;
   }
 );
 
@@ -54,6 +55,7 @@ export const accountSlice = createSlice({
     },
     setUser: (state, action) => {
       state.userInfo = { ...action.payload };
+      state.userInfo = null;
     },
   },
   extraReducers: (builder) => {
@@ -66,6 +68,9 @@ export const accountSlice = createSlice({
         state.userInfo = action.payload;
       }
     );
+    builder.addMatcher(isAnyOf(signInUser.rejected), (_, action) => {
+      throw action.payload;
+    });
   },
 });
 

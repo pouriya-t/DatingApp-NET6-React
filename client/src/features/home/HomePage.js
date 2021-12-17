@@ -1,11 +1,14 @@
 import { Button, Grid, Stack, Typography } from "@mui/material";
 import React, { useState } from "react";
-import { useAppSelector } from "../../app/store/configureStore";
 import Register from "../account/Register";
+import { useAppSelector } from "../../app/store/configureStore";
+import LoadingComponent from "../../app/layout/LoadingComponent";
 
-export default function HomePage() {
+export default function HomePage({ loading }) {
   const [isRegisterForm, setIsRegisterForm] = useState(false);
   const { userInfo } = useAppSelector((state) => state.account);
+
+  if (loading) return <LoadingComponent />;
 
   return (
     <>

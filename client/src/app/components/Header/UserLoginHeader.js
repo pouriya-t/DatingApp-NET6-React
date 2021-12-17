@@ -10,17 +10,15 @@ import {
 import { LoadingButton } from "@mui/lab";
 import { makeStyles } from "@mui/styles";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../store/configureStore";
-import {
-  fetchCurrentUser,
-  signInUser,
-  signOut,
-} from "../../../features/account/accountSlice";
+import { signInUser, signOut } from "../../../features/account/accountSlice";
 
 export default function UserLoginHeader() {
   const classes = useStyles();
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  let { userInfo } = useAppSelector((state) => state.account);
+  const { userInfo } = useAppSelector((state) => state.account);
   const {
     register,
     handleSubmit,
@@ -32,17 +30,13 @@ export default function UserLoginHeader() {
     },
   } = useForm({ mode: "onChange" });
 
-  async function onSubmit(data, e) {
+  async function onSubmit(data) {
     try {
       await dispatch(signInUser(data));
       reset();
     } catch (error) {
       console.log(error);
     }
-  }
-
-  if (!userInfo) {
-    dispatch(fetchCurrentUser());
   }
 
   return (
@@ -67,7 +61,10 @@ export default function UserLoginHeader() {
               <MenuItem
                 className="logout-menuitem"
                 style={styles.loginSelected}
-                onClick={() => dispatch(signOut())}
+                onClick={() => {
+                  navigate("/");
+                  dispatch(signOut());
+                }}
               >
                 Logout
               </MenuItem>
