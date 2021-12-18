@@ -1,12 +1,15 @@
-using API.Extensions;
 using API.Middleware;
 using Microsoft.OpenApi.Models;
 
-var builder = WebApplication.CreateBuilder(args);
 
+var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
 
+
+
+
 // Add services to the container.
+
 services.AddApplicationServices(builder.Configuration);
 services.AddControllers();
 services.AddCors();
@@ -66,5 +69,25 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+// Seed Data Start
+using var scope = app.Services.CreateScope();
+var servicesBuilder = scope.ServiceProvider;
+
+try
+{
+    using var context = servicesBuilder.GetRequiredService<DataContext>();
+    await context.Database.MigrateAsync();
+    await Seed.SeedUsers(context);
+
+}
+catch (Exception ex)
+{
+    var logger = servicesBuilder.GetRequiredService<ILogger<Program>>();
+    logger.LogError(ex, "An error occured during migrations");
+}
+
+// Seed Data End
+
 
 app.Run();
