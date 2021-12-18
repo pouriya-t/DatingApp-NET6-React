@@ -1,18 +1,13 @@
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { store } from "../store/configureStore";
+import { history } from "../..";
 
 axios.defaults.baseURL = "https://localhost:5001/api/";
 
 const responseBody = (response) => response.data;
 
 axios.interceptors.response.use(
-  async (response) => {
-    // Any status code that lie within the range of 2xx cause this function to trigger
-    // Do something with response data
-    return response;
-  },
+  (response) => response,
   (error) => {
     const { data, status } = error.response;
     switch (status) {
@@ -36,8 +31,7 @@ axios.interceptors.response.use(
         break;
       case 500:
         toast.error(data.message);
-        console.log(data);
-        // window.location.pathname = "/server-error";
+        history.push("/server-error", { error: data });
         break;
       default:
         break;
@@ -45,6 +39,7 @@ axios.interceptors.response.use(
     return Promise.reject(error.response);
   }
 );
+
 const requests = {
   get: (url, params = null) => axios.get(url, { params }).then(responseBody),
   post: (url, body) => axios.post(url, body).then(responseBody),
