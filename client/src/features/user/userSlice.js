@@ -6,8 +6,8 @@ const initialState = {
   user: null,
 };
 
-export const getUserList = createAsyncThunk(
-  "users/getUserList",
+export const getUsersList = createAsyncThunk(
+  "users/getUsersList",
   async (_, thunkAPI) => {
     try {
       return await agent.User.list();
@@ -17,12 +17,14 @@ export const getUserList = createAsyncThunk(
   }
 );
 
+
+
 export const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(getUserList.fulfilled, (state, action) => {
+    builder.addCase(getUsersList.fulfilled, (state, action) => {
       state.userList = action.payload;
     });
   },

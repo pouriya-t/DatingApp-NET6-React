@@ -7,6 +7,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Routes, Route } from "react-router-dom";
 import MemberList from "../../features/members/MemberList";
+import MemberDetails from "../../features/members/MemberDetails";
 import Lists from "../../features/lists/Lists";
 import Messages from "../../features/messages/Messages";
 import PrivateRoute from "./PrivateRoute";
@@ -42,12 +43,14 @@ function App() {
         <Route exact path="/" element={<HomePage loading={loading} />} />
         <Route exact path="/server-error" element={<ServerError />} />
         <Route exact path="/error" element={<ErrorDisplay />} />
-        <Route element={<PrivateRoute roles={false} />}>
+        {/* <Route element={<PrivateRoute roles={false} />}>
           <Route path="/members" element={<MemberList />} />
-        </Route>
+        </Route> */}
         <Route element={<PrivateRoute />}>
           <Route path="/lists" element={<Lists />} />
           <Route path="/messages" element={<Messages />} />
+          <Route path="/members" element={<MemberList />} />
+          <Route path="/members/:id" element={<MemberDetails />} />
         </Route>
         <Route path="/*" element={<NotFound />} />
       </Routes>

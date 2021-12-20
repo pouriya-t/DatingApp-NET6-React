@@ -6,6 +6,14 @@ axios.defaults.baseURL = "https://localhost:5001/api/";
 
 const responseBody = (response) => response.data;
 
+axios.interceptors.request.use((config) => {
+  if (localStorage.getItem("user") !== null) {
+    const { token } = JSON.parse(localStorage.getItem("user"));
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
 axios.interceptors.response.use(
   (response) => response,
   (error) => {
@@ -59,6 +67,7 @@ const TestErrors = {
 
 const User = {
   list: () => requests.get("users"),
+  user: (username) => requests.get(`users/${username}`),
 };
 
 const agent = {
