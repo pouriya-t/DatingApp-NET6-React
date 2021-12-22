@@ -4,6 +4,8 @@ import { history } from "../..";
 
 axios.defaults.baseURL = "https://localhost:5001/api/";
 
+const sleep = () => new Promise((resolve) => setTimeout(resolve, 500));
+
 const responseBody = (response) => response.data;
 
 axios.interceptors.request.use((config) => {
@@ -15,7 +17,10 @@ axios.interceptors.request.use((config) => {
 });
 
 axios.interceptors.response.use(
-  (response) => response,
+  async (response) => {
+    await sleep();
+    return response;
+  },
   (error) => {
     const { data, status } = error.response;
     switch (status) {
@@ -51,6 +56,7 @@ axios.interceptors.response.use(
 const requests = {
   get: (url, params = null) => axios.get(url, { params }).then(responseBody),
   post: (url, body) => axios.post(url, body).then(responseBody),
+  put: (url, body) => axios.put(url, body).then(responseBody),
 };
 
 const Account = {
@@ -68,6 +74,7 @@ const TestErrors = {
 const User = {
   list: () => requests.get("users"),
   user: (username) => requests.get(`users/${username}`),
+  updateProfile: (values) => requests.put("users", values),
 };
 
 const agent = {

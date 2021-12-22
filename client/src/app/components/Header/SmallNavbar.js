@@ -34,8 +34,8 @@ export default function SmallNavbar({ menuList, navStyles, userInfo }) {
       >
         <Paper
           sx={{
-            color: "#9c27b0",
-            backgroundColor: "#e1e6f2",
+            color: "white",
+            backgroundColor: "#2986f0",
           }}
         >
           {userInfo &&

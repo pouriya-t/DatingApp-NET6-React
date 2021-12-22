@@ -15,9 +15,10 @@ import ErrorDisplay from "../../features/errors/ErrorDisplay";
 import { fetchCurrentUser } from "../../features/account/accountSlice";
 import NotFound from "../../features/errors/NotFound";
 import ServerError from "../../features/errors/ServerError";
+import UserProfile from "../../features/account/UserProfile";
 
 function App() {
-  const sleep = () => new Promise((resolve) => setTimeout(resolve, 2000));
+  const sleep = () => new Promise((resolve) => setTimeout(resolve, 1000));
   const dispatch = useAppDispatch();
   const [loading, setLoading] = useState(true);
 
@@ -51,6 +52,7 @@ function App() {
           <Route path="/messages" element={<Messages />} />
           <Route path="/members" element={<MemberList />} />
           <Route path="/members/:id" element={<MemberDetails />} />
+          <Route path="/member/edit" element={<UserProfile />} />
         </Route>
         <Route path="/*" element={<NotFound />} />
       </Routes>

@@ -10,7 +10,12 @@ const navStyles = {
   textDecoration: "none",
   typography: "h6",
   "&:hover": { color: "grey.500" },
-  "&.active": { color: "#0b1152", fontWeight: "bold" },
+  "&.active": {
+    // color: "#0b1152",
+    fontWeight: "bold",
+    backgroundColor: "#9c27b0",
+    borderRadius: "8px",
+  },
 };
 
 export default function Navbar() {
@@ -39,15 +44,15 @@ export default function Navbar() {
 
   return (
     <>
-      <Box sx={{ flexGrow: 1 }}>
+      <Box sx={{ flexGrow: 1, mb: 5 }}>
         <AppBar position="static" style={{ padding: "6px" }}>
           <Toolbar>
             <MenuItem sx={navStyles} to="/" component={NavLink}>
               <Typography variant="h4">MUI</Typography>
             </MenuItem>
-            <MenuItem sx={navStyles} to="/error" component={NavLink}>
+            {/* <MenuItem sx={navStyles} to="/error" component={NavLink}>
               <Typography variant="h6">Error</Typography>
-            </MenuItem>
+            </MenuItem> */}
             {isSmall ? (
               <SmallNavbar
                 userInfo={userInfo}

@@ -9,10 +9,11 @@ import {
 import PersonIcon from "@mui/icons-material/Person";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import EmailIcon from "@mui/icons-material/Email";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
 import { getUsersList } from "../user/userSlice";
 import { Link } from "react-router-dom";
+import LoadingComponent from "../../app/layout/LoadingComponent";
 
 export default function MemberList() {
   const { userList } = useAppSelector((state) => state.user);
@@ -22,8 +23,10 @@ export default function MemberList() {
     dispatch(getUsersList());
   }, [dispatch]);
 
+  if (!userList) return <LoadingComponent message="Loading members..." />;
+
   return (
-    <Container sx={{ mt: 4 }}>
+    <Container>
       <Grid container spacing={2}>
         {userList?.map((user) => (
           <Grid key={user.id} item xs={6} sm={2}>

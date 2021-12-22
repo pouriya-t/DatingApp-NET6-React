@@ -38,10 +38,7 @@ export const registerUser = createAsyncThunk(
 export const fetchCurrentUser = createAsyncThunk(
   "account/fetchCurrentUser",
   async () => {
-    if (localStorage.getItem("user") !== null) {
-      return JSON.parse(localStorage.getItem("user"));
-    }
-    return;
+    return JSON.parse(localStorage.getItem("user"));
   }
 );
 

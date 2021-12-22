@@ -3,31 +3,34 @@ import { Container, Grid, Tab } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import agent from "../../app/api/agent";
+import LoadingComponent from "../../app/layout/LoadingComponent";
+import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
+import { getUserDetails } from "../user/userSlice";
 import MemberCard from "./MemberCard";
 import MemberDescription from "./MemberDescription";
 import MemberImages from "./MemberImages";
 
 export default function MemberDetails() {
   const { state: currentUsername } = useLocation();
-  const [user, setUser] = useState({});
+  const { userDetails } = useAppSelector((state) => state.user);
+  const dispatch = useAppDispatch();
   const [value, setValue] = useState("1");
-
   useEffect(() => {
-    agent.User.user(currentUsername)
-      .then((user) => setUser(user))
-      .catch((error) => console.log(error));
-  }, [currentUsername]);
+    dispatch(getUserDetails(currentUsername));
+  }, [dispatch, currentUsername]);
 
   const handleChange = (_, newValue) => {
     setValue(newValue);
   };
 
+  if (!userDetails || currentUsername !== userDetails.username)
+    return <LoadingComponent message="Loading member..." />;
+
   return (
     <Container sx={{ mt: 4, mb: 4 }}>
       <Grid container spacing={2}>
         <Grid item xs={12} sm={4}>
-          <MemberCard user={user} />
+          <MemberCard userDetails={userDetails} />
         </Grid>
         <Grid item xs={12} sm={8}>
           <Box sx={{ width: "100%", typography: "body1" }}>
@@ -42,7 +45,7 @@ export default function MemberDetails() {
                 >
                   <Tab
                     sx={styleTab}
-                    label={`About ${user.username}`}
+                    label={`About ${userDetails.username}`}
                     value="1"
                   />
                   <Tab sx={styleTab} label="Interests" value="2" />
@@ -51,11 +54,11 @@ export default function MemberDetails() {
                 </TabList>
               </Box>
               <TabPanel value="1">
-                <MemberDescription user={user} />
+                <MemberDescription userDetails={userDetails} />
               </TabPanel>
               <TabPanel value="2">Interstsss </TabPanel>
               <TabPanel value="3">
-                <MemberImages photos={user.photos} />
+                <MemberImages photos={userDetails.photos} />
               </TabPanel>
               <TabPanel value="4">Item 4</TabPanel>
             </TabContext>
