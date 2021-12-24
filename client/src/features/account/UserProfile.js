@@ -7,6 +7,7 @@ import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
 import { getUserProfile } from "../user/userSlice";
 import ProfileCard from "./ProfileCard";
 import UserDescription from "./UserDescription";
+import UserPhotos from "./UserPhotos";
 
 export default function UserProfile() {
   const { userProfile } = useAppSelector((state) => state.user);
@@ -69,7 +70,9 @@ export default function UserProfile() {
               <TabPanel value="1">
                 <UserDescription profileForm={profileForm} />
               </TabPanel>
-              <TabPanel value="2">Edit Photos </TabPanel>
+              <TabPanel value="2">
+                <UserPhotos photos={userProfile?.photos} />
+              </TabPanel>
             </TabContext>
           </Box>
         </Grid>

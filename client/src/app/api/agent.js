@@ -8,6 +8,8 @@ const sleep = () => new Promise((resolve) => setTimeout(resolve, 500));
 
 const responseBody = (response) => response.data;
 
+// axios.defaults.withCredentials = true;
+
 axios.interceptors.request.use((config) => {
   if (localStorage.getItem("user") !== null) {
     const { token } = JSON.parse(localStorage.getItem("user"));
@@ -57,11 +59,23 @@ const requests = {
   get: (url, params = null) => axios.get(url, { params }).then(responseBody),
   post: (url, body) => axios.post(url, body).then(responseBody),
   put: (url, body) => axios.put(url, body).then(responseBody),
+  delete: (url, id) => axios.delete(url, id).then(responseBody),
 };
 
 const Account = {
   login: (values) => requests.post("account/login", values),
   register: (values) => requests.post("account/register", values),
+  uploadPhoto: (values) =>
+    requests.post("users/add-photo", values, {
+      headers: {
+        "Content-type": "multipart/form-data",
+        "Set-Cookie": "cross-site-cookie=whatever",
+        SameSite: "None",
+        Secure: "None",
+      },
+    }),
+  deletePhoto: (id) => requests.delete(`users/delete-photo/${id}`),
+  setMainPhoto: (id) => requests.put(`users/set-main-photo/${id}`),
 };
 
 const TestErrors = {

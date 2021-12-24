@@ -1,15 +1,43 @@
 import { NavLink, useNavigate } from "react-router-dom";
-import { useAppDispatch } from "../../store/configureStore";
+import { useAppDispatch, useAppSelector } from "../../store/configureStore";
 import { signOut } from "../../../features/account/accountSlice";
-import { Select, Typography, Divider, MenuItem, Paper } from "@mui/material";
+import {
+  Select,
+  Typography,
+  Divider,
+  MenuItem,
+  Paper,
+  CardMedia,
+} from "@mui/material";
 import { makeStyles } from "@mui/styles";
+import { getUserProfile } from "../../../features/user/userSlice";
+import { useEffect } from "react";
 
 export default function SelectMenu({ userInfo }) {
   const classes = useStyles();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const { userProfile } = useAppSelector((state) => state.user);
+
+  useEffect(() => {
+    if (!userProfile) {
+      dispatch(getUserProfile());
+    }
+  }, [dispatch, userProfile]);
+
   return (
     <>
+      {userProfile?.photos.map(
+        (photo) =>
+          photo.isMain && (
+            <CardMedia
+              key={photo.id}
+              component="img"
+              sx={{ width: "50px", height: "50px", mr: 2, borderRadius: 5 }}
+              image={photo.url}
+            />
+          )
+      )}
       <Typography sx={{ mr: 2 }}>Welcome {userInfo.username}</Typography>
       <Select
         className={classes.select}

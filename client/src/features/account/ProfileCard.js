@@ -18,6 +18,7 @@ export default function ProfileCard({ profileForm, userProfile = null }) {
     formState: { isDirty },
   } = profileForm;
 
+
   function onSubmit(data) {
     dispatch(updateUserProfile(data));
   }

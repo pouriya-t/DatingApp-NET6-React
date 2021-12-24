@@ -8,7 +8,7 @@ import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
 import { getUserDetails } from "../user/userSlice";
 import MemberCard from "./MemberCard";
 import MemberDescription from "./MemberDescription";
-import MemberImages from "./MemberImages";
+import ImageViewer from "../../app/components/ImageViewer";
 
 export default function MemberDetails() {
   const { state: currentUsername } = useLocation();
@@ -58,7 +58,7 @@ export default function MemberDetails() {
               </TabPanel>
               <TabPanel value="2">Interstsss </TabPanel>
               <TabPanel value="3">
-                <MemberImages photos={userDetails.photos} />
+                <ImageViewer photos={userDetails.photos} />
               </TabPanel>
               <TabPanel value="4">Item 4</TabPanel>
             </TabContext>

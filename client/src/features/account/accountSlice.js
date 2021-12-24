@@ -35,6 +35,7 @@ export const registerUser = createAsyncThunk(
   }
 );
 
+
 export const fetchCurrentUser = createAsyncThunk(
   "account/fetchCurrentUser",
   async () => {
