@@ -12,11 +12,15 @@ export default function MemberCard({ userDetails }) {
   return (
     <Card>
       <div style={{ border: "8px double #d9d9d9", margin: 20 }}>
-        {userDetails.photos?.map(
-          (photo) =>
-            photo.isMain && (
-              <CardMedia key={photo.id} component="img" image={photo.url} />
-            )
+        {userDetails?.photos?.length > 0 ? (
+          userDetails.photos?.map(
+            (photo) =>
+              photo.isMain && (
+                <CardMedia key={photo.id} component="img" image={photo.url} />
+              )
+          )
+        ) : (
+          <CardMedia component="img" image="/images/profile/Profile-Icon.png" />
         )}
       </div>
       <CardContent>

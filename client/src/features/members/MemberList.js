@@ -38,12 +38,21 @@ export default function MemberList() {
                 className="card-member"
               >
                 <div className="card-image-div">
-                  <CardMedia
-                    id={user.id}
-                    component="img"
-                    image={user.photoUrl}
-                    className="card-image"
-                  />
+                  {user.photoUrl ? (
+                    <CardMedia
+                      id={user.id}
+                      component="img"
+                      image={user.photoUrl}
+                      className="card-image"
+                    />
+                  ) : (
+                    <CardMedia
+                      id={user.id}
+                      component="img"
+                      image="/images/profile/Profile-Icon.png"
+                      className="card-image"
+                    />
+                  )}
                 </div>
                 <div className="animated-button">
                   <Link to={`/members/${user.username}`} state={user.username}>

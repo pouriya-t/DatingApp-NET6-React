@@ -5,5 +5,13 @@ import { useAppSelector } from "../../store/configureStore";
 export default function UserLoginHeader() {
   const { userInfo } = useAppSelector((state) => state.account);
 
-  return <>{userInfo ? <SelectMenu userInfo={userInfo} /> : <Login />}</>;
+  return (
+    <>
+      {userInfo ? (
+        <SelectMenu userInfo={userInfo} />
+      ) : userInfo !== undefined ? (
+        <Login />
+      ) : null}
+    </>
+  );
 }

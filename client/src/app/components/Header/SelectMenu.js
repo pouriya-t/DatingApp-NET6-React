@@ -27,16 +27,24 @@ export default function SelectMenu({ userInfo }) {
 
   return (
     <>
-      {userProfile?.photos.map(
-        (photo) =>
-          photo.isMain && (
-            <CardMedia
-              key={photo.id}
-              component="img"
-              sx={{ width: "50px", height: "50px", mr: 2, borderRadius: 5 }}
-              image={photo.url}
-            />
-          )
+      {userProfile?.photos?.length > 0 ? (
+        userProfile?.photos?.map(
+          (photo) =>
+            photo.isMain && (
+              <CardMedia
+                key={photo.id}
+                component="img"
+                sx={{ width: "50px", height: "50px", mr: 2, borderRadius: 5 }}
+                image={photo.url}
+              />
+            )
+        )
+      ) : (
+        <CardMedia
+          sx={{ width: "50px", height: "50px", mr: 2, borderRadius: 5 }}
+          component="img"
+          image="/images/profile/Profile-Icon.png"
+        />
       )}
       <Typography sx={{ mr: 2 }}>Welcome {userInfo.username}</Typography>
       <Select

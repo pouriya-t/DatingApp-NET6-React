@@ -18,7 +18,6 @@ export default function ProfileCard({ profileForm, userProfile = null }) {
     formState: { isDirty },
   } = profileForm;
 
-
   function onSubmit(data) {
     dispatch(updateUserProfile(data));
   }
@@ -28,11 +27,15 @@ export default function ProfileCard({ profileForm, userProfile = null }) {
   return (
     <Card sx={{ mt: 2 }}>
       <div style={{ border: "8px double #d9d9d9", margin: 20 }}>
-        {userProfile?.photos?.map(
-          (photo) =>
-            photo.isMain && (
-              <CardMedia key={photo.id} component="img" image={photo.url} />
-            )
+        {userProfile?.photos?.length > 0 ? (
+          userProfile?.photos?.map(
+            (photo) =>
+              photo.isMain && (
+                <CardMedia key={photo.id} component="img" image={photo.url} />
+              )
+          )
+        ) : (
+          <CardMedia component="img" image="/images/profile/Profile-Icon.png" />
         )}
       </div>
       <CardContent>
