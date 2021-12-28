@@ -11,7 +11,7 @@ import {
 import { LoadingButton } from "@mui/lab";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import { useAppDispatch } from "../store/configureStore";
-import { uploadPhoto } from "../../features/user/userSlice";
+import { uploadPhoto } from "../../features/account/accountSlice";
 
 export default function ImageUploader() {
   const [showFiles, setShowFiles] = useState([]);
@@ -63,17 +63,16 @@ export default function ImageUploader() {
         <Grid container spacing={2}>
           {showFiles?.map((file, index) => (
             <Grid key={index} item xs={6} sm={2} sx={{ marginRight: 2 }}>
-              <div
-                style={{
+              <IconButton
+                disabled={loading}
+                sx={{
                   position: "relative",
                   bottom: "-30px",
                   right: "-5px",
-                  backgroundColor: "red",
-                  maxWidth: "10%",
-                  border: "8px solid red",
-                  color: "white",
-                  borderRadius: "20px",
                   cursor: "pointer",
+                  color: "red",
+                  backgroundColor: "orange",
+                  borderRadius: 10,
                 }}
                 onClick={() =>
                   setShowFiles(
@@ -82,7 +81,7 @@ export default function ImageUploader() {
                 }
               >
                 X
-              </div>
+              </IconButton>
               <CardMedia
                 component="img"
                 sx={{ width: "100px", height: "100px" }}

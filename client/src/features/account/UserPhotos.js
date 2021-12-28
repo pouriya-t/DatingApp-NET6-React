@@ -17,8 +17,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import ImageUploader from "../../app/components/ImageUploader";
 import { useState } from "react";
 import { useAppDispatch } from "../../app/store/configureStore";
-import { deletePhoto, isMainPhoto } from "../user/userSlice";
 import { LoadingButton } from "@mui/lab";
+import { deletePhoto, isMainPhoto } from "./accountSlice";
 
 export default function UserPhotos({ photos }) {
   const dispatch = useAppDispatch();

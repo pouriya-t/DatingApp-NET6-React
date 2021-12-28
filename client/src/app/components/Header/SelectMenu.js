@@ -1,6 +1,9 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../store/configureStore";
-import { signOut } from "../../../features/account/accountSlice";
+import {
+  getUserProfile,
+  signOut,
+} from "../../../features/account/accountSlice";
 import {
   Select,
   Typography,
@@ -10,14 +13,13 @@ import {
   CardMedia,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import { getUserProfile } from "../../../features/user/userSlice";
 import { useEffect } from "react";
 
 export default function SelectMenu({ userInfo }) {
   const classes = useStyles();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { userProfile } = useAppSelector((state) => state.user);
+  const { userProfile } = useAppSelector((state) => state.account);
 
   useEffect(() => {
     if (!userProfile) {
@@ -39,13 +41,13 @@ export default function SelectMenu({ userInfo }) {
               />
             )
         )
-      ) : (
+      ) : userProfile?.photos !== undefined ? (
         <CardMedia
           sx={{ width: "50px", height: "50px", mr: 2, borderRadius: 5 }}
           component="img"
           image="/images/profile/Profile-Icon.png"
         />
-      )}
+      ) : null}
       <Typography sx={{ mr: 2 }}>Welcome {userInfo.username}</Typography>
       <Select
         className={classes.select}

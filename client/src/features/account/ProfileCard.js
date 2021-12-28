@@ -8,8 +8,9 @@ import {
   Typography,
 } from "@mui/material";
 import { useAppDispatch } from "../../app/store/configureStore";
-import { updateUserProfile } from "../user/userSlice";
+import { updateUserProfile } from "./accountSlice";
 import UserSkeleton from "./UserSkeleton";
+import TimeAgo from "react-timeago";
 
 export default function ProfileCard({ profileForm, userProfile = null }) {
   const dispatch = useAppDispatch();
@@ -21,6 +22,7 @@ export default function ProfileCard({ profileForm, userProfile = null }) {
   function onSubmit(data) {
     dispatch(updateUserProfile(data));
   }
+
 
   if (!userProfile) return <UserSkeleton />;
 
@@ -58,8 +60,23 @@ export default function ProfileCard({ profileForm, userProfile = null }) {
         <Typography sx={{ fontWeight: "bold" }} variant="h5" component="div">
           Last Active:
         </Typography>
-        <Typography variant="h6" component="div">
-          {userProfile?.lastActive?.toString().split("T")[0]}
+        <Typography
+          variant="h6"
+          component="div"
+        >
+          last seen{" "}
+          <TimeAgo
+            formatter={(value, unit, suffix) => {
+              if (unit === "second") {
+                return "just now";
+              } else {
+                return (
+                  value + " " + unit + (value > 1 ? "s" : "") + " " + suffix
+                );
+              }
+            }}
+            date={userProfile?.lastActive}
+          />
         </Typography>
       </CardContent>
       <CardContent>

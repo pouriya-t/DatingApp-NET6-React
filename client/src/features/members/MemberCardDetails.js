@@ -7,8 +7,9 @@ import {
   CardMedia,
   Typography,
 } from "@mui/material";
+import TimeAgo from "react-timeago";
 
-export default function MemberCard({ userDetails }) {
+export default function MemberCardDetails({ userDetails }) {
   return (
     <Card>
       <div style={{ border: "8px double #d9d9d9", margin: 20 }}>
@@ -44,7 +45,18 @@ export default function MemberCard({ userDetails }) {
           Last Active:
         </Typography>
         <Typography variant="h6" component="div">
-          {userDetails.lastActive?.toString().split("T")[0]}
+          <TimeAgo
+            formatter={(value, unit, suffix) => {
+              if (unit === "second") {
+                return "just now";
+              } else {
+                return (
+                  value + " " + unit + (value > 1 ? "s" : "") + " " + suffix
+                );
+              }
+            }}
+            date={userDetails?.lastActive}
+          />
         </Typography>
       </CardContent>
       <CardContent>

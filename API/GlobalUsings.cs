@@ -13,3 +13,4 @@ global using API.DTOs;
 global using AutoMapper;
 global using AutoMapper.QueryableExtensions;
 global using API.Extensions;
+global using API.Helpers;

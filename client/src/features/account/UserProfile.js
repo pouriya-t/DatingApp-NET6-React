@@ -4,13 +4,13 @@ import { Box } from "@mui/system";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
-import { getUserProfile } from "../user/userSlice";
+import { getUserProfile } from "./accountSlice";
 import ProfileCard from "./ProfileCard";
 import UserDescription from "./UserDescription";
 import UserPhotos from "./UserPhotos";
 
 export default function UserProfile() {
-  const { userProfile } = useAppSelector((state) => state.user);
+  const { userProfile } = useAppSelector((state) => state.account);
   const profileForm = useForm({ mode: "onChange" });
   const [value, setValue] = useState("1");
   const dispatch = useAppDispatch();
@@ -38,6 +38,8 @@ export default function UserProfile() {
     }
     return;
   };
+
+  userProfile && console.log(userProfile);
 
   return (
     <Container sx={{ mt: 4, mb: 4 }}>

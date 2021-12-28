@@ -5,8 +5,8 @@ import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import LoadingComponent from "../../app/layout/LoadingComponent";
 import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
-import { getUserDetails } from "../user/userSlice";
-import MemberCard from "./MemberCard";
+import { getUserDetails } from "./userSlice";
+import MemberCardDetails from "./MemberCardDetails";
 import MemberDescription from "./MemberDescription";
 import ImageViewer from "../../app/components/ImageViewer";
 
@@ -30,7 +30,7 @@ export default function MemberDetails() {
     <Container sx={{ mt: 4, mb: 4 }}>
       <Grid container spacing={2}>
         <Grid item xs={12} sm={4}>
-          <MemberCard userDetails={userDetails} />
+          <MemberCardDetails userDetails={userDetails} />
         </Grid>
         <Grid item xs={12} sm={8}>
           <Box sx={{ width: "100%", typography: "body1" }}>

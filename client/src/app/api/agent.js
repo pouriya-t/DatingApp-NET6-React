@@ -1,6 +1,7 @@
 import axios from "axios";
 import { toast } from "react-toastify";
 import { history } from "../..";
+import { PaginatedResponse } from "../models/pagination";
 
 axios.defaults.baseURL = "https://localhost:5001/api/";
 
@@ -21,6 +22,14 @@ axios.interceptors.request.use((config) => {
 axios.interceptors.response.use(
   async (response) => {
     await sleep();
+    const pagination = response.headers["pagination"];
+    if (pagination) {
+      response.data = new PaginatedResponse(
+        response.data,
+        JSON.parse(pagination)
+      );
+      return response;
+    }
     return response;
   },
   (error) => {
@@ -69,9 +78,6 @@ const Account = {
     requests.post("users/add-photo", values, {
       headers: {
         "Content-type": "multipart/form-data",
-        "Set-Cookie": "cross-site-cookie=whatever",
-        SameSite: "None",
-        Secure: "None",
       },
     }),
   deletePhoto: (id) => requests.delete(`users/delete-photo/${id}`),
@@ -86,7 +92,7 @@ const TestErrors = {
 };
 
 const User = {
-  list: () => requests.get("users"),
+  list: (params) => requests.get("users", params),
   user: (username) => requests.get(`users/${username}`),
   updateProfile: (values) => requests.put("users", values),
 };

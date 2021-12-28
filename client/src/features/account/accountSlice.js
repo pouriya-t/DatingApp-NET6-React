@@ -1,9 +1,11 @@
 import { createAsyncThunk, createSlice, isAnyOf } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 import agent from "../../app/api/agent";
+import { resetAllUserStates } from "../members/userSlice";
 
 const initialState = {
   userInfo: undefined,
+  userProfile: null,
 };
 
 export const signInUser = createAsyncThunk(
@@ -35,7 +37,6 @@ export const registerUser = createAsyncThunk(
   }
 );
 
-
 export const fetchCurrentUser = createAsyncThunk(
   "account/fetchCurrentUser",
   async () => {
@@ -43,22 +44,111 @@ export const fetchCurrentUser = createAsyncThunk(
   }
 );
 
+export const getUserProfile = createAsyncThunk(
+  "users/getUserProfile",
+  async (_, thunkAPI) => {
+    try {
+      const getUserName = thunkAPI.getState().account?.userInfo.username;
+      const userInfo = await agent.User.user(getUserName);
+      return userInfo;
+    } catch (error) {
+      return thunkAPI.rejectWithValue({ error: error.data });
+    }
+  }
+);
+
+export const updateUserProfile = createAsyncThunk(
+  "users/updateUserProfile",
+  async (values, thunkAPI) => {
+    try {
+      return await agent.User.updateProfile(values);
+    } catch (error) {
+      return thunkAPI.rejectWithValue({ error: error.data });
+    }
+  }
+);
+
+export const uploadPhoto = createAsyncThunk(
+  "account/uploadPhoto",
+  async (data, thunkAPI) => {
+    try {
+      return await agent.Account.uploadPhoto(data);
+    } catch (error) {
+      return thunkAPI.rejectWithValue({ error: error.data });
+    }
+  }
+);
+
+export const isMainPhoto = createAsyncThunk(
+  "account/isMainPhoto",
+  async (id, thunkAPI) => {
+    try {
+      await agent.Account.setMainPhoto(id);
+      return id;
+    } catch (error) {
+      return thunkAPI.rejectWithValue({ error: error.data });
+    }
+  }
+);
+
+export const deletePhoto = createAsyncThunk(
+  "account/deletePhoto",
+  async (id, thunkAPI) => {
+    try {
+      await agent.Account.deletePhoto(id);
+      return id;
+    } catch (error) {
+      return thunkAPI.rejectWithValue({ error: error.data });
+    }
+  }
+);
+
+export const signOut = createAsyncThunk("account/signOut", (_, thunkAPI) => {
+  localStorage.removeItem("user");
+  thunkAPI.dispatch(resetAllUserStates());
+});
+
 export const accountSlice = createSlice({
   name: "account",
   initialState,
   reducers: {
-    signOut: (state) => {
-      state.userInfo = null;
-      localStorage.removeItem("user");
-    },
     setUser: (state, action) => {
       state.userInfo = { ...action.payload };
-      // state.userInfo = null;
     },
   },
   extraReducers: (builder) => {
     builder.addCase(registerUser.fulfilled, (state, action) => {
       state.userInfo = { ...action.payload };
+    });
+    builder.addCase(getUserProfile.fulfilled, (state, action) => {
+      state.userProfile = action.payload;
+    });
+    builder.addCase(uploadPhoto.fulfilled, (state, action) => {
+      state.userProfile.photos.push(action.payload);
+    });
+    builder.addCase(isMainPhoto.fulfilled, (state, action) => {
+      for (const photo in state.userProfile.photos) {
+        if (state.userProfile.photos[photo].isMain) {
+          state.userProfile.photos[photo].isMain = false;
+        }
+
+        if (state.userProfile.photos[photo].id === action.payload) {
+          state.userProfile.photos[photo].isMain = true;
+        }
+      }
+    });
+    builder.addCase(deletePhoto.fulfilled, (state, action) => {
+      state.userProfile.photos = state.userProfile.photos.filter(
+        (p) => p.id !== action.payload
+      );
+    });
+    builder.addCase(updateUserProfile.fulfilled, (state, action) => {
+      state.userProfile = action.payload;
+      toast.success("Your profile updated.");
+    });
+    builder.addCase(signOut.fulfilled, (state) => {
+      state.userInfo = null;
+      state.userProfile = null;
     });
     builder.addMatcher(
       isAnyOf(signInUser.fulfilled, fetchCurrentUser.fulfilled),
@@ -72,4 +162,4 @@ export const accountSlice = createSlice({
   },
 });
 
-export const { setUser, signOut } = accountSlice.actions;
+export const { setUser } = accountSlice.actions;
