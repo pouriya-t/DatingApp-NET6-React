@@ -39,8 +39,6 @@ export default function UserProfile() {
     return;
   };
 
-  userProfile && console.log(userProfile);
-
   return (
     <Container sx={{ mt: 4, mb: 4 }}>
       <Grid container spacing={2}>

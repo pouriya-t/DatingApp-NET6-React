@@ -128,7 +128,15 @@ export default function FilterMembers({
           Reset filters
         </LoadingButton>
       </Grid>
-      <Grid item xs={6} sm={2}>
+      <Grid
+        sx={{ textAlign: "center" }}
+        item
+        xs={12}
+        sm={12}
+        md={12}
+        lg={2}
+        xl={2}
+      >
         <ToggleButtonGroup
           value={alignment}
           exclusive

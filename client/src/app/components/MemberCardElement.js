@@ -3,10 +3,16 @@ import { Link } from "react-router-dom";
 import PersonIcon from "@mui/icons-material/Person";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import EmailIcon from "@mui/icons-material/Email";
-
-import React from "react";
+import agent from "../api/agent";
+import { toast } from "react-toastify";
 
 export default function MemberCardElement({ user }) {
+  function likeUser(username) {
+    agent.Like.likeUser(username)
+      .then(() => toast.success(`You liked ${username}`))
+      .catch((error) => console.log(error.data));
+  }
+
   return (
     <Grid item xs={6} sm={2}>
       <Card>
@@ -37,7 +43,10 @@ export default function MemberCardElement({ user }) {
             <Link to={`/members/${user.username}`} state={user.username}>
               <PersonIcon sx={styleIcon} />
             </Link>
-            <FavoriteIcon sx={styleIcon} />
+            <FavoriteIcon
+              onClick={() => likeUser(user.username)}
+              sx={styleIcon}
+            />
             <EmailIcon sx={styleIcon} />
           </div>
         </div>

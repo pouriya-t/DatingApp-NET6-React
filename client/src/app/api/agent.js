@@ -84,6 +84,11 @@ const Account = {
   setMainPhoto: (id) => requests.put(`users/set-main-photo/${id}`),
 };
 
+const Like = {
+  likeUser: (username) => requests.post(`likes/${username}`),
+  getLikes: (params) => requests.get("likes", params),
+};
+
 const TestErrors = {
   get500Error: () => requests.get("buggy/server-error"),
   get401Error: () => requests.get("buggy/auth"),
@@ -101,6 +106,7 @@ const agent = {
   User,
   TestErrors,
   Account,
+  Like,
 };
 
 export default agent;

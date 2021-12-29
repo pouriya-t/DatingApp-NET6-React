@@ -6,7 +6,7 @@ import LoadingComponent from "../../app/layout/LoadingComponent";
 import AppPagination from "../../app/components/AppPagination";
 import { Box } from "@mui/system";
 import FilterMembers from "./FilterMembers";
-import MemberCardElement from "./MemberCardElement";
+import MemberCardElement from "../../app/components/MemberCardElement";
 
 export default function MemberList() {
   const { userList, metaData, usersLoaded } = useAppSelector(

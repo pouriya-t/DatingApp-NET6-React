@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice, isAnyOf } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 import agent from "../../app/api/agent";
+import { resetAllLikeStates } from "../lists/likeSlice";
 import { resetAllUserStates } from "../members/userSlice";
 
 const initialState = {
@@ -106,6 +107,7 @@ export const deletePhoto = createAsyncThunk(
 export const signOut = createAsyncThunk("account/signOut", (_, thunkAPI) => {
   localStorage.removeItem("user");
   thunkAPI.dispatch(resetAllUserStates());
+  thunkAPI.dispatch(resetAllLikeStates());
 });
 
 export const accountSlice = createSlice({
