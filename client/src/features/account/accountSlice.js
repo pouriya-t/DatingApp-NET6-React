@@ -3,6 +3,7 @@ import { toast } from "react-toastify";
 import agent from "../../app/api/agent";
 import { resetAllLikeStates } from "../lists/likeSlice";
 import { resetAllUserStates } from "../members/userSlice";
+import { resetAllMessageStates } from "../messages/messageSlice";
 
 const initialState = {
   userInfo: undefined,
@@ -108,6 +109,7 @@ export const signOut = createAsyncThunk("account/signOut", (_, thunkAPI) => {
   localStorage.removeItem("user");
   thunkAPI.dispatch(resetAllUserStates());
   thunkAPI.dispatch(resetAllLikeStates());
+  thunkAPI.dispatch(resetAllMessageStates());
 });
 
 export const accountSlice = createSlice({

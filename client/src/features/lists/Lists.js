@@ -1,45 +1,40 @@
-import { CircularProgress, Container, Grid } from "@mui/material";
+import { Container, Grid, Typography } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
 import MemberCardElement from "../../app/components/MemberCardElement";
 import ToggleButtonListGroup from "./ToggleButtonListGroup";
 import AppPagination from "../../app/components/AppPagination";
 import { likesUser, setPageNumber } from "./likeSlice";
-import { useEffect, useState } from "react";
-import { Box } from "@mui/system";
+import { useEffect } from "react";
+import LoadingSmallComponent from "../../app/components/LoadingSmallComponent";
 
 export default function Lists() {
   const { users, metaData, likesLoaded } = useAppSelector(
     (state) => state.like
   );
   const dispatch = useAppDispatch();
-  const [alignment, setAlignment] = useState("");
 
   useEffect(() => {
-    if (alignment && !likesLoaded) {
+    if (!likesLoaded) {
       dispatch(likesUser());
     }
-  }, [alignment, likesLoaded, dispatch]);
+  }, [likesLoaded, dispatch]);
 
   return (
     <Container>
-      <ToggleButtonListGroup
-        dispatch={dispatch}
-        alignment={alignment}
-        setAlignment={setAlignment}
-      />
-      {alignment && !likesLoaded ? (
-        <Box height="39vh" display="flex" alignItems="center">
-          <CircularProgress size={100} color="secondary" />
-        </Box>
-      ) : (
-        <Grid container spacing={2} sx={{ m: 2 }}>
+      <ToggleButtonListGroup dispatch={dispatch} />
+      {!likesLoaded ? (
+        <LoadingSmallComponent />
+      ) : users?.length > 0 ? (
+        <Grid container spacing={2}>
           {users?.map((user) => (
             <MemberCardElement key={user.id} user={user} />
           ))}
         </Grid>
+      ) : (
+        <Typography variant="h3">No Lists here...</Typography>
       )}
       <Grid container spacing={2} sx={{ m: 2 }}>
-        {metaData && (
+        {metaData && users?.length > 0 && (
           <AppPagination
             metaData={metaData}
             onPageChange={(page) =>

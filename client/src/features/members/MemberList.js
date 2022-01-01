@@ -1,12 +1,12 @@
-import { CircularProgress, Container, Grid, Typography } from "@mui/material";
+import { Container, Grid, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
 import { getUsersList, setPageNumber } from "./userSlice";
 import LoadingComponent from "../../app/layout/LoadingComponent";
 import AppPagination from "../../app/components/AppPagination";
-import { Box } from "@mui/system";
 import FilterMembers from "./FilterMembers";
 import MemberCardElement from "../../app/components/MemberCardElement";
+import LoadingSmallComponent from "../../app/components/LoadingSmallComponent";
 
 export default function MemberList() {
   const { userList, metaData, usersLoaded } = useAppSelector(
@@ -54,14 +54,7 @@ export default function MemberList() {
       loading === "created" + !usersLoaded ||
       loading === "lastActive" + !usersLoaded ||
       loading === "applyFilters" + !usersLoaded ? (
-        <Box
-          height="39vh"
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-        >
-          <CircularProgress size={100} color="secondary" />
-        </Box>
+        <LoadingSmallComponent justifyContent="center" />
       ) : null}
       <Grid
         container

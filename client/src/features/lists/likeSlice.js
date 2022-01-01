@@ -12,8 +12,7 @@ function getAxiosParams(likeParams) {
   const params = new URLSearchParams();
   params.append("pageNumber", likeParams.pageNumber.toString());
   params.append("pageSize", likeParams.pageSize.toString());
-  likeParams.predicate &&
-    params.append("predicate", likeParams.predicate.toString());
+  params.append("predicate", likeParams.predicate.toString());
   return params;
 }
 
@@ -21,6 +20,7 @@ function initParams() {
   return {
     pageNumber: 1,
     pageSize: 2,
+    predicate: "likedBy",
   };
 }
 

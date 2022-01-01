@@ -3,7 +3,6 @@ import {
   Card,
   CardActions,
   CardMedia,
-  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -19,6 +18,7 @@ import { useState } from "react";
 import { useAppDispatch } from "../../app/store/configureStore";
 import { LoadingButton } from "@mui/lab";
 import { deletePhoto, isMainPhoto } from "./accountSlice";
+import LoadingSmallComponent from "../../app/components/LoadingSmallComponent";
 
 export default function UserPhotos({ photos }) {
   const dispatch = useAppDispatch();
@@ -54,9 +54,7 @@ export default function UserPhotos({ photos }) {
   return (
     <Box sx={{ flexGrow: 1 }}>
       {loadingImages ? (
-        <Box sx={{ textAlign: "center", mt: 5, mb: 5 }}>
-          <CircularProgress />
-        </Box>
+        <LoadingSmallComponent sx={{ textAlign: "center", mt: 5, mb: 5 }} />
       ) : (
         <Grid container>
           {photos.map((photo) => (

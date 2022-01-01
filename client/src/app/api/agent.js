@@ -89,6 +89,13 @@ const Like = {
   getLikes: (params) => requests.get("likes", params),
 };
 
+const Message = {
+  getMessages: (params) => requests.get("messages", params),
+  getThreadMessages: (username) => requests.get(`messages/thread/${username}`),
+  sendMessage: (values) => requests.post("messages", values),
+  deleteMessage: (id) => requests.delete(`messages/${id}`),
+};
+
 const TestErrors = {
   get500Error: () => requests.get("buggy/server-error"),
   get401Error: () => requests.get("buggy/auth"),
@@ -107,6 +114,7 @@ const agent = {
   TestErrors,
   Account,
   Like,
+  Message,
 };
 
 export default agent;

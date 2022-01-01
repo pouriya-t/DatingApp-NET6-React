@@ -47,7 +47,12 @@ export default function MemberCardElement({ user }) {
               onClick={() => likeUser(user.username)}
               sx={styleIcon}
             />
-            <EmailIcon sx={styleIcon} />
+            <Link
+              to={`/members/${user.username}?tab=4`}
+              state={user.username}
+            >
+              <EmailIcon sx={styleIcon} />
+            </Link>
           </div>
         </div>
         <CardContent>

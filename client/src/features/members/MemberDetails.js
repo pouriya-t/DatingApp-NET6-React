@@ -9,15 +9,19 @@ import { getUserDetails } from "./userSlice";
 import MemberCardDetails from "./MemberCardDetails";
 import MemberDescription from "./MemberDescription";
 import ImageViewer from "../../app/components/ImageViewer";
+import MemberMessages from "./MemberMessages";
+import { useSearchParams } from "react-router-dom";
 
 export default function MemberDetails() {
   const { state: currentUsername } = useLocation();
+  let [searchParams] = useSearchParams();
   const { userDetails } = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
   const [value, setValue] = useState("1");
   useEffect(() => {
     dispatch(getUserDetails(currentUsername));
-  }, [dispatch, currentUsername]);
+    if (searchParams.get("tab") === "4") setValue("4");
+  }, [dispatch, currentUsername, searchParams]);
 
   const handleChange = (_, newValue) => {
     setValue(newValue);
@@ -60,7 +64,9 @@ export default function MemberDetails() {
               <TabPanel value="3">
                 <ImageViewer photos={userDetails.photos} />
               </TabPanel>
-              <TabPanel value="4">Item 4</TabPanel>
+              <TabPanel value="4">
+                <MemberMessages username={userDetails.username} />
+              </TabPanel>
             </TabContext>
           </Box>
         </Grid>
