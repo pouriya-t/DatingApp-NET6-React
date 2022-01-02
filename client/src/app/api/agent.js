@@ -109,12 +109,19 @@ const User = {
   updateProfile: (values) => requests.put("users", values),
 };
 
+const Admin = {
+  getUsersWithRoles: () => requests.get("admin/users-with-roles"),
+  changeUserRoles: (username, roles) =>
+    requests.post(`admin/edit-roles/${username}?roles=${roles}`),
+};
+
 const agent = {
   User,
   TestErrors,
   Account,
   Like,
   Message,
+  Admin,
 };
 
 export default agent;

@@ -1,12 +1,14 @@
 import { createAsyncThunk, createSlice, isAnyOf } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 import agent from "../../app/api/agent";
+import getRolesFromToken from "../../app/utils/getRolesFromToken";
+import { resetAllAdminStates } from "../admin/adminSlice";
 import { resetAllLikeStates } from "../lists/likeSlice";
 import { resetAllUserStates } from "../members/userSlice";
 import { resetAllMessageStates } from "../messages/messageSlice";
 
 const initialState = {
-  userInfo: undefined,
+  userInfo: null,
   userProfile: null,
 };
 
@@ -16,6 +18,7 @@ export const signInUser = createAsyncThunk(
     try {
       const userData = await agent.Account.login(data);
       localStorage.setItem("user", JSON.stringify(userData));
+      userData.roles = getRolesFromToken(userData.token);
       return userData;
     } catch (error) {
       toast.error(error.response.data);
@@ -29,10 +32,9 @@ export const registerUser = createAsyncThunk(
   async (data, thunkAPI) => {
     try {
       const userData = await agent.Account.register(data);
-      if (userData) {
-        localStorage.setItem("user", JSON.stringify(userData));
-        return userData;
-      }
+      localStorage.setItem("user", JSON.stringify(userData));
+      userData.roles = getRolesFromToken(userData.token);
+      return userData;
     } catch (error) {
       return thunkAPI.rejectWithValue({ error: error.data });
     }
@@ -42,12 +44,15 @@ export const registerUser = createAsyncThunk(
 export const fetchCurrentUser = createAsyncThunk(
   "account/fetchCurrentUser",
   async () => {
-    return JSON.parse(localStorage.getItem("user"));
+    const user = JSON.parse(localStorage.getItem("user"));
+    const userRoles = getRolesFromToken(user?.token);
+    user.roles = userRoles;
+    return user;
   }
 );
 
 export const getUserProfile = createAsyncThunk(
-  "users/getUserProfile",
+  "account/getUserProfile",
   async (_, thunkAPI) => {
     try {
       const getUserName = thunkAPI.getState().account?.userInfo.username;
@@ -60,7 +65,7 @@ export const getUserProfile = createAsyncThunk(
 );
 
 export const updateUserProfile = createAsyncThunk(
-  "users/updateUserProfile",
+  "account/updateUserProfile",
   async (values, thunkAPI) => {
     try {
       return await agent.User.updateProfile(values);
@@ -110,16 +115,13 @@ export const signOut = createAsyncThunk("account/signOut", (_, thunkAPI) => {
   thunkAPI.dispatch(resetAllUserStates());
   thunkAPI.dispatch(resetAllLikeStates());
   thunkAPI.dispatch(resetAllMessageStates());
+  thunkAPI.dispatch(resetAllAdminStates());
 });
 
 export const accountSlice = createSlice({
   name: "account",
   initialState,
-  reducers: {
-    setUser: (state, action) => {
-      state.userInfo = { ...action.payload };
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder.addCase(registerUser.fulfilled, (state, action) => {
       state.userInfo = { ...action.payload };

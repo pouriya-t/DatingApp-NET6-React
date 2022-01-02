@@ -3,7 +3,6 @@ import { Container, Grid, Tab } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import LoadingComponent from "../../app/layout/LoadingComponent";
 import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
 import { getUserDetails } from "./userSlice";
 import MemberCardDetails from "./MemberCardDetails";
@@ -11,6 +10,7 @@ import MemberDescription from "./MemberDescription";
 import ImageViewer from "../../app/components/ImageViewer";
 import MemberMessages from "./MemberMessages";
 import { useSearchParams } from "react-router-dom";
+import LoadingSmallComponent from "../../app/components/LoadingSmallComponent";
 
 export default function MemberDetails() {
   const { state: currentUsername } = useLocation();
@@ -27,50 +27,54 @@ export default function MemberDetails() {
     setValue(newValue);
   };
 
-  if (!userDetails || currentUsername !== userDetails.username)
-    return <LoadingComponent message="Loading member..." />;
+  // if (!userDetails || currentUsername !== userDetails.username)
+  // if (!userDetails) return <LoadingComponent message="Loading member..." />;
 
   return (
     <Container sx={{ mt: 4, mb: 4 }}>
-      <Grid container spacing={2}>
-        <Grid item xs={12} sm={4}>
-          <MemberCardDetails userDetails={userDetails} />
+      {userDetails ? (
+        <Grid container spacing={2}>
+          <Grid item xs={12} sm={4}>
+            <MemberCardDetails userDetails={userDetails} />
+          </Grid>
+          <Grid item xs={12} sm={8}>
+            <Box sx={{ width: "100%", typography: "body1" }}>
+              <TabContext value={value}>
+                <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+                  <TabList
+                    variant="scrollable"
+                    allowScrollButtonsMobile
+                    indicatorColor="secondary"
+                    textColor="secondary"
+                    onChange={handleChange}
+                  >
+                    <Tab
+                      sx={styleTab}
+                      label={`About ${userDetails.username}`}
+                      value="1"
+                    />
+                    <Tab sx={styleTab} label="Interests" value="2" />
+                    <Tab sx={styleTab} label="Photos" value="3" />
+                    <Tab sx={styleTab} label="Messages" value="4" />
+                  </TabList>
+                </Box>
+                <TabPanel value="1">
+                  <MemberDescription userDetails={userDetails} />
+                </TabPanel>
+                <TabPanel value="2">Interstsss </TabPanel>
+                <TabPanel value="3">
+                  <ImageViewer photos={userDetails.photos} />
+                </TabPanel>
+                <TabPanel value="4">
+                  <MemberMessages username={userDetails.username} />
+                </TabPanel>
+              </TabContext>
+            </Box>
+          </Grid>
         </Grid>
-        <Grid item xs={12} sm={8}>
-          <Box sx={{ width: "100%", typography: "body1" }}>
-            <TabContext value={value}>
-              <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-                <TabList
-                  variant="scrollable"
-                  allowScrollButtonsMobile
-                  indicatorColor="secondary"
-                  textColor="secondary"
-                  onChange={handleChange}
-                >
-                  <Tab
-                    sx={styleTab}
-                    label={`About ${userDetails.username}`}
-                    value="1"
-                  />
-                  <Tab sx={styleTab} label="Interests" value="2" />
-                  <Tab sx={styleTab} label="Photos" value="3" />
-                  <Tab sx={styleTab} label="Messages" value="4" />
-                </TabList>
-              </Box>
-              <TabPanel value="1">
-                <MemberDescription userDetails={userDetails} />
-              </TabPanel>
-              <TabPanel value="2">Interstsss </TabPanel>
-              <TabPanel value="3">
-                <ImageViewer photos={userDetails.photos} />
-              </TabPanel>
-              <TabPanel value="4">
-                <MemberMessages username={userDetails.username} />
-              </TabPanel>
-            </TabContext>
-          </Box>
-        </Grid>
-      </Grid>
+      ) : (
+        <LoadingSmallComponent justifyContent="center" />
+      )}
     </Container>
   );
 }

@@ -37,12 +37,17 @@ export const getUsersList = createAsyncThunk(
 
 export const getUserDetails = createAsyncThunk(
   "users/getUserDetails",
-  async (username) => {
+  async (username, thunkAPI) => {
     const userList = store.getState().user?.userList;
-    const userDetails = await userList.find(
-      (user) => user.username === username
-    );
-    return userDetails;
+    if (userList) {
+      return userList.find((user) => user.username === username);
+    } else {
+      try {
+        return await agent.User.user(username);
+      } catch (error) {
+        return thunkAPI.rejectWithValue({ error: error.data });
+      }
+    }
   }
 );
 

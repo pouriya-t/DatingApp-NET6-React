@@ -9,20 +9,19 @@ export default function PrivateRoute({ roles = null }) {
   let state = useState(true);
 
   useEffect(() => {
-    if (!state || userInfo === null) {
-      if (userInfo === undefined) return;
+    if (!state || !userInfo) {
       toast.error("You shall not pass!");
     }
   }, [state, userInfo]);
 
-  if (roles === null) {
+  if (!roles) {
     if (userInfo) {
       state = true;
       return <Outlet />;
     }
   }
-  if (roles !== null) {
-    if (userInfo && roles) {
+  if (roles) {
+    if (userInfo && roles?.some((r) => userInfo.roles?.includes(r))) {
       state = true;
       return <Outlet />;
     }

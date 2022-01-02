@@ -4,6 +4,7 @@ import { userSlice } from "../../features/members/userSlice";
 import { accountSlice } from "../../features/account/accountSlice";
 import { likeSlice } from "../../features/lists/likeSlice";
 import { messageSlice } from "../../features/messages/messageSlice";
+import { adminSlice } from "../../features/admin/adminSlice";
 
 export const store = configureStore({
   reducer: {
@@ -11,6 +12,7 @@ export const store = configureStore({
     account: accountSlice.reducer,
     like: likeSlice.reducer,
     message: messageSlice.reducer,
+    admin: adminSlice.reducer,
   },
 });
 

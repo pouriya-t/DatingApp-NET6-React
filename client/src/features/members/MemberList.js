@@ -2,7 +2,6 @@ import { Container, Grid, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
 import { getUsersList, setPageNumber } from "./userSlice";
-import LoadingComponent from "../../app/layout/LoadingComponent";
 import AppPagination from "../../app/components/AppPagination";
 import FilterMembers from "./FilterMembers";
 import MemberCardElement from "../../app/components/MemberCardElement";
@@ -20,7 +19,7 @@ export default function MemberList() {
     if (!usersLoaded) dispatch(getUsersList());
   }, [dispatch, usersLoaded]);
 
-  if (!userList) return <LoadingComponent message="Loading members..." />;
+  if (!userList) return <LoadingSmallComponent justifyContent="center" />;
 
   return (
     <Container sx={{ mb: 5 }}>

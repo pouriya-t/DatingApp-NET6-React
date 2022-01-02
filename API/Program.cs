@@ -78,8 +78,10 @@ var servicesBuilder = scope.ServiceProvider;
 try
 {
     using var context = servicesBuilder.GetRequiredService<DataContext>();
+    var userManager = servicesBuilder.GetRequiredService<UserManager<AppUser>>();
+    var roleManager = servicesBuilder.GetRequiredService<RoleManager<AppRole>>();
     await context.Database.MigrateAsync();
-    await Seed.SeedUsers(context);
+    await Seed.SeedUsers(userManager, roleManager);
 
 }
 catch (Exception ex)

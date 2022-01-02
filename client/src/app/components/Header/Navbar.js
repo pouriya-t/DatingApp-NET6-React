@@ -40,7 +40,11 @@ export default function Navbar() {
   useEffect(() => {
     handleResize();
     window.addEventListener("resize", handleResize, true);
-  }, [windowSize]);
+  }, [windowSize, userInfo]);
+
+  if (userInfo?.roles.includes("Admin")) {
+    menuList.push({ title: "Admin", path: "/admin" });
+  }
 
   return (
     <>

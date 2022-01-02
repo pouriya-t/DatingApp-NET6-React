@@ -16,6 +16,8 @@ import { fetchCurrentUser } from "../../features/account/accountSlice";
 import NotFound from "../../features/errors/NotFound";
 import ServerError from "../../features/errors/ServerError";
 import UserProfile from "../../features/account/UserProfile";
+import LoadingComponent from "./LoadingComponent";
+import Admin from "../../features/admin/Admin";
 
 function App() {
   const sleep = () => new Promise((resolve) => setTimeout(resolve, 1000));
@@ -36,6 +38,8 @@ function App() {
       .finally(() => setLoading(false));
   }, [initApp]);
 
+  if (loading) return <LoadingComponent message="Initialising app..." />;
+
   return (
     <>
       <ToastContainer position="bottom-right" hideProgressBar />
@@ -44,14 +48,16 @@ function App() {
         <Route exact path="/" element={<HomePage loading={loading} />} />
         <Route exact path="/server-error" element={<ServerError />} />
         <Route exact path="/error" element={<ErrorDisplay />} />
-        {/* <Route element={<PrivateRoute roles={false} />}>
-          <Route path="/members" element={<MemberList />} />
-        </Route> */}
+        <Route element={<PrivateRoute roles={["Admin"]} />}>
+          <Route path="/admin" element={<Admin />} />
+        </Route>
         <Route element={<PrivateRoute />}>
           <Route path="/lists" element={<Lists />} />
           <Route path="/messages" element={<Messages />} />
           <Route path="/members" element={<MemberList />} />
+          {/* <Route path="/admin" element={<Admin />} /> */}
           <Route path="/members/:id" element={<MemberDetails />} />
+          <Route path="/members/:id?tab=4" element={<MemberDetails />} />
           <Route path="/member/edit" element={<UserProfile />} />
         </Route>
         <Route path="/*" element={<NotFound />} />
