@@ -56,8 +56,7 @@ function App() {
           <Route path="/messages" element={<Messages />} />
           <Route path="/members" element={<MemberList />} />
           {/* <Route path="/admin" element={<Admin />} /> */}
-          <Route path="/members/:id" element={<MemberDetails />} />
-          <Route path="/members/:id?tab=4" element={<MemberDetails />} />
+          <Route path="/members/:username" element={<MemberDetails />} />
           <Route path="/member/edit" element={<UserProfile />} />
         </Route>
         <Route path="/*" element={<NotFound />} />

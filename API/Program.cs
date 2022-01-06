@@ -1,4 +1,5 @@
 using API.Middleware;
+using API.SignalR;
 using Microsoft.OpenApi.Models;
 
 
@@ -14,6 +15,7 @@ services.AddApplicationServices(builder.Configuration);
 services.AddControllers();
 services.AddCors();
 services.AddIdentityServices(builder.Configuration);
+services.AddSignalR();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 services.AddEndpointsApiExplorer();
 
@@ -64,12 +66,16 @@ app.UseHttpsRedirection();
 
 app.UseCors(x =>
     x.AllowAnyHeader().AllowAnyMethod().AllowCredentials()
+            .AllowCredentials()
             .WithOrigins("http://localhost:3000"));
 
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHub<PresenceHub>("hubs/presence");
+app.MapHub<MessageHub>("hubs/message");
+
 
 // Seed Data Start
 using var scope = app.Services.CreateScope();

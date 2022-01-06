@@ -6,6 +6,13 @@ import { resetAllAdminStates } from "../admin/adminSlice";
 import { resetAllLikeStates } from "../lists/likeSlice";
 import { resetAllUserStates } from "../members/userSlice";
 import { resetAllMessageStates } from "../messages/messageSlice";
+import {
+  PresenceService,
+  // createHubConnection,
+  // stopHubConnection,
+} from "../../app/services/hubServices/PresenceService";
+
+export const presence = new PresenceService();
 
 const initialState = {
   userInfo: null,
@@ -18,6 +25,7 @@ export const signInUser = createAsyncThunk(
     try {
       const userData = await agent.Account.login(data);
       localStorage.setItem("user", JSON.stringify(userData));
+      presence.createHubConnection(userData);
       userData.roles = getRolesFromToken(userData.token);
       return userData;
     } catch (error) {
@@ -33,6 +41,7 @@ export const registerUser = createAsyncThunk(
     try {
       const userData = await agent.Account.register(data);
       localStorage.setItem("user", JSON.stringify(userData));
+      presence.createHubConnection(userData);
       userData.roles = getRolesFromToken(userData.token);
       return userData;
     } catch (error) {
@@ -45,8 +54,11 @@ export const fetchCurrentUser = createAsyncThunk(
   "account/fetchCurrentUser",
   async () => {
     const user = JSON.parse(localStorage.getItem("user"));
-    const userRoles = getRolesFromToken(user?.token);
-    user.roles = userRoles;
+    if (user) {
+      presence.createHubConnection(user);
+      const userRoles = getRolesFromToken(user?.token);
+      user.roles = userRoles;
+    }
     return user;
   }
 );
@@ -111,11 +123,16 @@ export const deletePhoto = createAsyncThunk(
 );
 
 export const signOut = createAsyncThunk("account/signOut", (_, thunkAPI) => {
-  localStorage.removeItem("user");
-  thunkAPI.dispatch(resetAllUserStates());
-  thunkAPI.dispatch(resetAllLikeStates());
-  thunkAPI.dispatch(resetAllMessageStates());
-  thunkAPI.dispatch(resetAllAdminStates());
+  try {
+    localStorage.removeItem("user");
+    presence.stopHubConnection();
+    thunkAPI.dispatch(resetAllUserStates());
+    thunkAPI.dispatch(resetAllLikeStates());
+    thunkAPI.dispatch(resetAllMessageStates());
+    thunkAPI.dispatch(resetAllAdminStates());
+  } catch (error) {
+    return thunkAPI.rejectWithValue({ error: error.data });
+  }
 });
 
 export const accountSlice = createSlice({

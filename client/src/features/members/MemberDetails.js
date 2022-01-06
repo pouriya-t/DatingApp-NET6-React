@@ -1,35 +1,130 @@
 import { TabContext, TabList, TabPanel } from "@mui/lab";
-import { Container, Grid, Tab } from "@mui/material";
+import { Badge, Container, Grid, Tab } from "@mui/material";
 import { Box } from "@mui/system";
-import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useLocation, useSearchParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
 import { getUserDetails } from "./userSlice";
 import MemberCardDetails from "./MemberCardDetails";
 import MemberDescription from "./MemberDescription";
 import ImageViewer from "../../app/components/ImageViewer";
 import MemberMessages from "./MemberMessages";
-import { useSearchParams } from "react-router-dom";
 import LoadingSmallComponent from "../../app/components/LoadingSmallComponent";
+import { HubConnectionBuilder } from "@microsoft/signalr";
+import { presence } from "../account/accountSlice";
 
 export default function MemberDetails() {
   const { state: currentUsername } = useLocation();
   let [searchParams] = useSearchParams();
+  const [connection, setConnection] = useState();
+  const [isMemberMessage, setIsMemberMessage] = useState();
+  const [messages, setMessages] = useState([]);
+  const [updatedGroup, setUpdatedGroup] = useState(false);
+
   const { userDetails } = useAppSelector((state) => state.user);
+  const { userInfo } = useAppSelector((state) => state.account);
+
   const dispatch = useAppDispatch();
   const [value, setValue] = useState("1");
+  const [isNewMessage, setIsNewMessage] = useState(false);
+
+  const joinChat = async (user, currentUsername) => {
+    try {
+      const connection = new HubConnectionBuilder()
+        .withUrl(
+          "https://localhost:5001/hubs/message?user=" + currentUsername,
+          {
+            accessTokenFactory: () => user.token,
+          }
+        )
+        .withAutomaticReconnect()
+        .build();
+
+      connection.start().catch((error) => console.log(error));
+
+      connection.on("ReceiveMessageThread", (messages) => {
+        setMessages(messages);
+      });
+      connection.on("NewMessage", (message) => {
+        setMessages((messages) => [...messages, message]);
+      });
+
+      connection.on("UpdatedGroup", (group) => {
+        if (group.connections.some((x) => x.username === currentUsername)) {
+          setUpdatedGroup(true);
+        }
+      });
+
+      connection.onclose((e) => {
+        setConnection();
+        setMessages([]);
+      });
+
+      setConnection(connection);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  presence.hubConnection.on("NewMessageReceived", () => {
+    setIsNewMessage(true);
+  });
+
   useEffect(() => {
     dispatch(getUserDetails(currentUsername));
-    if (searchParams.get("tab") === "4") setValue("4");
-  }, [dispatch, currentUsername, searchParams]);
+    if (searchParams.get("tab") === "4" || value === "4") {
+      setTimeout(() => {
+        setValue("4");
+        setIsMemberMessage(true);
+      }, 500);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, currentUsername, searchParams, userInfo]);
+
+  useEffect(() => {
+    if (!isMemberMessage) {
+      closeConnection();
+    }
+    return () => {
+      closeConnection();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isMemberMessage]);
 
   const handleChange = (_, newValue) => {
     setValue(newValue);
   };
 
+  const sendMessage = async (recipientUsername, content) => {
+    try {
+      await connection.invoke("SendMessage", {
+        recipientUsername, //: username,
+        content, //: data.content,
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const closeConnection = async () => {
+    try {
+      await connection.stop();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  if (updatedGroup) {
+    messages.forEach((message) => {
+      if (!message.dateRead) {
+        message.dateRead = new Date(Date.now());
+      }
+    });
+    setUpdatedGroup(false);
+  }
+
   // if (!userDetails || currentUsername !== userDetails.username)
   // if (!userDetails) return <LoadingComponent message="Loading member..." />;
-
   return (
     <Container sx={{ mt: 4, mb: 4 }}>
       {userDetails ? (
@@ -55,7 +150,20 @@ export default function MemberDetails() {
                     />
                     <Tab sx={styleTab} label="Interests" value="2" />
                     <Tab sx={styleTab} label="Photos" value="3" />
-                    <Tab sx={styleTab} label="Messages" value="4" />
+                    <Tab
+                      icon={
+                        isNewMessage ? (
+                          <Badge
+                            sx={{ zIndex: 1, mt: 1.5 }}
+                            badgeContent="New"
+                            color="error"
+                          />
+                        ) : null
+                      }
+                      sx={styleTab}
+                      label="Messages"
+                      value="4"
+                    />
                   </TabList>
                 </Box>
                 <TabPanel value="1">
@@ -66,7 +174,15 @@ export default function MemberDetails() {
                   <ImageViewer photos={userDetails.photos} />
                 </TabPanel>
                 <TabPanel value="4">
-                  <MemberMessages username={userDetails.username} />
+                  <MemberMessages
+                    messages={messages}
+                    sendMessage={sendMessage}
+                    username={currentUsername}
+                    joinChat={joinChat}
+                    userInfo={userInfo}
+                    setIsMemberMessage={setIsMemberMessage}
+                    setIsNewMessage={setIsNewMessage}
+                  />
                 </TabPanel>
               </TabContext>
             </Box>

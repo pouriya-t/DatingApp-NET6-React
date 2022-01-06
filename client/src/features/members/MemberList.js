@@ -7,6 +7,7 @@ import FilterMembers from "./FilterMembers";
 import MemberCardElement from "../../app/components/MemberCardElement";
 import LoadingSmallComponent from "../../app/components/LoadingSmallComponent";
 
+
 export default function MemberList() {
   const { userList, metaData, usersLoaded } = useAppSelector(
     (state) => state.user

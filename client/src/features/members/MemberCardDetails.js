@@ -7,9 +7,13 @@ import {
   CardMedia,
   Typography,
 } from "@mui/material";
+import { StyledBadge } from "../../app/components/StyledBadge";
 import TimeAgoComponent from "../../app/components/TimeAgoComponent";
+import checkUserOnline from "../../app/utils/checkUserOnline";
+import { presence } from "../account/accountSlice";
 
 export default function MemberCardDetails({ userDetails }) {
+  const { onlineUsers } = presence;
   return (
     <Card>
       <div style={{ border: "8px double #d9d9d9", margin: 20 }}>
@@ -25,6 +29,11 @@ export default function MemberCardDetails({ userDetails }) {
         )}
       </div>
       <CardContent>
+        {checkUserOnline(onlineUsers, userDetails.username) ? (
+          <Typography variant="p">
+            Online &nbsp; <StyledBadge overlap="circular" variant="dot" />
+          </Typography>
+        ) : null}
         <Typography sx={{ fontWeight: "bold" }} variant="h5" component="div">
           Location:
         </Typography>

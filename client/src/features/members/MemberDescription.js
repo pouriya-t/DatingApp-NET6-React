@@ -1,6 +1,6 @@
 import { Typography } from "@mui/material";
 
-export default function MemberDescription({userDetails}) {
+export default function MemberDescription({ userDetails }) {
   return (
     <>
       <Typography sx={{ mb: 2 }} variant="h4" component="div">

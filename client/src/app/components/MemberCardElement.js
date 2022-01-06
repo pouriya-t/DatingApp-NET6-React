@@ -5,13 +5,18 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import EmailIcon from "@mui/icons-material/Email";
 import agent from "../api/agent";
 import { toast } from "react-toastify";
+import { StyledBadge } from "./StyledBadge";
+import checkUserOnline from "../utils/checkUserOnline";
+import { presence } from "../../features/account/accountSlice";
 
 export default function MemberCardElement({ user }) {
+  const { onlineUsers } = presence;
   function likeUser(username) {
     agent.Like.likeUser(username)
       .then(() => toast.success(`You liked ${username}`))
       .catch((error) => console.log(error.data));
   }
+
 
   return (
     <Grid item xs={6} sm={2}>
@@ -47,10 +52,7 @@ export default function MemberCardElement({ user }) {
               onClick={() => likeUser(user.username)}
               sx={styleIcon}
             />
-            <Link
-              to={`/members/${user.username}?tab=4`}
-              state={user.username}
-            >
+            <Link to={`/members/${user.username}?tab=4`} state={user.username}>
               <EmailIcon sx={styleIcon} />
             </Link>
           </div>
@@ -62,7 +64,12 @@ export default function MemberCardElement({ user }) {
             variant="h5"
             component="div"
           >
-            <PersonIcon sx={{ mr: 1, position: "relative", top: "4px" }} />
+            {checkUserOnline(onlineUsers, user.username) ? (
+              <StyledBadge overlap="circular" variant="dot" />
+            ) : null}
+            <PersonIcon
+              sx={{ mr: 1, ml: 1, position: "relative", top: "4px" }}
+            />
             {user.username}, {user.age}
           </Typography>
           <Typography

@@ -9,7 +9,7 @@ const sleep = () => new Promise((resolve) => setTimeout(resolve, 500));
 
 const responseBody = (response) => response.data;
 
-// axios.defaults.withCredentials = true;
+axios.defaults.withCredentials = true;
 
 axios.interceptors.request.use((config) => {
   if (localStorage.getItem("user") !== null) {
