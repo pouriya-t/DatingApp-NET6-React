@@ -68,7 +68,6 @@ export default function SelectMenu({ userInfo }) {
           >
             Edit Profile
           </MenuItem>
-          <MenuItem style={styles.loginSelected}>Account 2</MenuItem>
           <Divider />
           <MenuItem
             className="logout-menuitem"

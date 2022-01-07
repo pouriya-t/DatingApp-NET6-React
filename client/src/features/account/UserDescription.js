@@ -7,16 +7,12 @@ import {
 } from "@mui/material";
 
 export default function UserDescription({ profileForm }) {
-  const { register, handleSubmit } = profileForm;
-
-  function onSubmit(data) {
-    console.log(data);
-  }
+  const { register } = profileForm;
 
   return (
     <Box
       component="form"
-      onSubmit={handleSubmit(onSubmit)}
+      // onSubmit={handleSubmit(onSubmit)}
       sx={{ margin: "0 20px 0 20px" }}
     >
       <Typography sx={{ mb: 2 }} variant="h4" component="div">

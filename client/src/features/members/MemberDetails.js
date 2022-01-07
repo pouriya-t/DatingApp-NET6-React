@@ -18,7 +18,7 @@ export default function MemberDetails() {
   let [searchParams] = useSearchParams();
   const [connection, setConnection] = useState();
   const [isMemberMessage, setIsMemberMessage] = useState();
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState();
   const [updatedGroup, setUpdatedGroup] = useState(false);
 
   const { userDetails } = useAppSelector((state) => state.user);
@@ -115,7 +115,7 @@ export default function MemberDetails() {
   };
 
   if (updatedGroup) {
-    messages.forEach((message) => {
+    messages?.forEach((message) => {
       if (!message.dateRead) {
         message.dateRead = new Date(Date.now());
       }

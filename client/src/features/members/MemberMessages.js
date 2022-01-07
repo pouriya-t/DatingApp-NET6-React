@@ -57,7 +57,7 @@ export default function MemberMessages({
     //   console.log("Exited");
     // };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSubmitting, userInfo, username, messages]);
+  }, [isSubmitting, messages, userInfo, username]);
 
   useEffect(() => {
     joinChat(userInfo, username);
@@ -81,11 +81,11 @@ export default function MemberMessages({
   return (
     <>
       <Paper style={{ maxHeight: "100vh", overflow: "auto" }}>
-        {messages.length <= 0 ? (
+        {messages?.length <= 0 ? (
           <Typography variant="p">
             Not message yet...Say hello to {username}{" "}
           </Typography>
-        ) : !messages ? (
+        ) : messages === undefined ? (
           <LoadingSmallComponent justifyContent="center" />
         ) : (
           <List sx={{ m: 2 }}>
@@ -96,7 +96,7 @@ export default function MemberMessages({
                       <Stack
                         ref={messagesEndRef}
                         spacing={2}
-                        component="div"
+                        component="li"
                         sx={{ mb: 2 }}
                       >
                         <Typography
