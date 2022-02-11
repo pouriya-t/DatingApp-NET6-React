@@ -16,6 +16,11 @@ import { NgxSpinnerModule } from 'ngx-spinner';
     TabsModule.forRoot(),
     NgxSpinnerModule,
   ],
-  exports: [BsDropdownModule, ToastrModule, TabsModule, NgxSpinnerModule],
+  exports: [
+    BsDropdownModule,
+    ToastrModule,
+    TabsModule,
+    NgxSpinnerModule,
+  ],
 })
 export class SharedModule {}
