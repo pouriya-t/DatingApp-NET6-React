@@ -26,6 +26,7 @@ import { PhotoEditorComponent } from './members/photo-editor/photo-editor.compon
 import { FileUploadModule } from 'ng2-file-upload';
 import { TextInputComponent } from './_forms/text-input/text-input.component';
 import { DateInputComponent } from './_forms/date-input/date-input.component';
+import { TimeagoModule } from 'ngx-timeago';
 
 @NgModule({
   declarations: [
@@ -56,6 +57,7 @@ import { DateInputComponent } from './_forms/date-input/date-input.component';
     SharedModule,
     NgxGalleryModule,
     FileUploadModule,
+    TimeagoModule.forRoot(),
   ],
   providers: [
     {
